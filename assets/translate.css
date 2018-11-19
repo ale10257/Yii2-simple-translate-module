@@ -1,0 +1,9 @@
+#translate-table .translate-tr:hover {
+    cursor: pointer;
+    background-color: #9f9f9f;
+}
+
+.d-inline {
+    display: inline-block;
+    margin-right: 5px;
+}

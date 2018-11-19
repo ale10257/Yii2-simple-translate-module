@@ -15,7 +15,7 @@
     },
     "autoload": {
         "psr-4": {
-            "ale1027\\translate\\": ""
+            "ale10257\\translate\\": ""
         }
     }
 }
