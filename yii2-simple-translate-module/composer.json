@@ -1,0 +1,21 @@
+{
+    "name": "ale10257/Yii2-simple-translate-module",
+    "type": "yii2-extension",
+    "keywords": ["yii2","translate module"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexey Kulagin",
+            "email": "proctoleha@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0",
+        "phpoffice/phpspreadsheet": "^1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "ale1027\\translate\\": ""
+        }
+    }
+}
