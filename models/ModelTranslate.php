@@ -14,7 +14,9 @@ class ModelTranslate extends ActiveRecord
     /** @inheritdoc */
     public static function tableName()
     {
-        return 'translate';
+        /** @var \ale10257\translate\Translate $module */
+        $module = \Yii::$app->getModule(TRANSLATE_MODULE);
+        return $module->table;
     }
 
     /**  @inheritdoc */
@@ -42,7 +44,7 @@ class ModelTranslate extends ActiveRecord
                     }
                 }
                 $cache->set($key, $translate);
-                self::createTService();
+                //self::createTService();
             }
         }
         if (!isset($translate[$sourceLanguage][$message])) {
@@ -55,7 +57,7 @@ class ModelTranslate extends ActiveRecord
             }
             $translate[$sourceLanguage][$message] = $message;
             $cache->set($key, $translate);
-            self::createTService();
+            //self::createTService();
         }
         if (empty($translate[$language][$message])) {
             return $translate[$sourceLanguage][$message];
