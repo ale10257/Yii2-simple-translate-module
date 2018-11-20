@@ -83,7 +83,7 @@ class ModelTranslate extends ActiveRecord
         $data = $data[Yii::$app->sourceLanguage];
         $str = '<?php' . PHP_EOL . 'namespace ' . $dataModule['nameSpace'] . ';' . PHP_EOL;
         $str .= 'use ale10257\translate\models\ModelTranslate;' . PHP_EOL . PHP_EOL;
-        $str .= 'class ' . $dataModule['className'] . PHP_EOL . '{' . PHP_EOL . "\t" . 'public static $terms = [' . PHP_EOL;
+        $str .= 'class TService' . PHP_EOL . '{' . PHP_EOL . "\t" . 'public static $terms = [' . PHP_EOL;
         foreach ($data as $item) {
             $str .= "\t\t'$item'" . ' => ' . "'$item'," . PHP_EOL;
         }
