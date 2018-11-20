@@ -13,19 +13,10 @@ use yii\helpers\FileHelper;
  */
 class ModelTranslate extends ActiveRecord
 {
-    /** @var Translate */
-    private static $module;
-
     /** @inheritdoc */
     public static function tableName()
     {
-        /** @var \ale10257\translate\Translate $module */
-        return self::$module->table;
-    }
-
-    public function init()
-    {
-        self::$module = \Yii::$app->getModule(TRANSLATE_MODULE);
+        return 'translate';
     }
 
     /**  @inheritdoc */
@@ -76,7 +67,9 @@ class ModelTranslate extends ActiveRecord
 
     private static function createTService()
     {
-        if (!$dataModule = self::$module->tService) {
+        /** @var Translate $module */
+        $module = \Yii::$app->getModule(TRANSLATE_MODULE);
+        if (!$dataModule = $module->tService) {
             return;
         }
         $data = Yii::$app->cache->get(TRANSLATE_MODULE);
