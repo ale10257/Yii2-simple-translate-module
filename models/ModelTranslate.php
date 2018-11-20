@@ -16,14 +16,18 @@ class ModelTranslate extends ActiveRecord
     /** @inheritdoc */
     public static function tableName()
     {
-        return 'translate';
+        return 'ale10257_translate';
     }
 
     /**  @inheritdoc */
     public function rules()
     {
+        $languages = LANGUAGES;
+        foreach ($languages as $key => $language) {
+            $languages[$key] = str_replace('-', '', $language);
+        }
         return [
-            [LANGUAGES, 'string'],
+            [$languages, 'string'],
         ];
     }
 
@@ -69,12 +73,12 @@ class ModelTranslate extends ActiveRecord
     {
         /** @var Translate $module */
         $module = \Yii::$app->getModule(TRANSLATE_MODULE);
-        if (!$dataModule = $module->tService) {
+        if (!$tService = $module->tService) {
             return;
         }
         $data = Yii::$app->cache->get(TRANSLATE_MODULE);
         $data = $data[Yii::$app->sourceLanguage];
-        $str = '<?php' . PHP_EOL . 'namespace ' . $dataModule['nameSpace'] . ';' . PHP_EOL;
+        $str = '<?php' . PHP_EOL . 'namespace ' . $tService['nameSpace'] . ';' . PHP_EOL;
         $str .= 'use ale10257\translate\models\ModelTranslate;' . PHP_EOL . PHP_EOL;
         $str .= 'class TService' . PHP_EOL . '{' . PHP_EOL . "\t" . 'public static $terms = [' . PHP_EOL;
         foreach ($data as $item) {
@@ -92,8 +96,8 @@ class ModelTranslate extends ActiveRecord
         $str .= "\t\t" . 'return !$placeholders ? $message : strtr($message, $placeholders);' . PHP_EOL;
         $str .= "\t" . '}' . PHP_EOL;
         $str .= '}';
-        FileHelper::createDirectory($dataModule['path']);
-        $file = FileHelper::normalizePath($dataModule['path'] . '/TService.php');
+        FileHelper::createDirectory($tService['path']);
+        $file = FileHelper::normalizePath($tService['path'] . '/TService.php');
         file_put_contents($file, $str);
     }
 }

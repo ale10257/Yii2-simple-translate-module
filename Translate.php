@@ -9,17 +9,11 @@ use yii\filters\AccessControl;
  */
 class Translate extends \yii\base\Module
 {
-    /** @var string */
-    public $webIconsPath = 'icons';
-    /** @var string */
-    public $iconExt = 'png';
     /** @var array  */
     public $accessRules = [
         'allow' => true,
         'roles' => ['@'],
     ];
-    /** @var string  */
-    public $table = 'translate';
     /** @var array  */
     public $tService = [];
 

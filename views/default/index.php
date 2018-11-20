@@ -1,19 +1,54 @@
 <?php
-/* @var $this yii\web\View */
-/* @var $searchModel ale10257\translate\models\Search */
-/* @var $dataProvider yii\data\ActiveDataProvider */
-
-/** @var \ale10257\translate\models\ExcelForm $excelModel */
+/**
+ * @var $this yii\web\View
+ * @var $searchModel ale10257\translate\models\Search
+ * @var $dataProvider yii\data\ActiveDataProvider
+ * @var \ale10257\translate\models\ExcelForm $excelModel
+ */
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use ale10257\translate\models\TService;
 use ale10257\translate\models\ModelTranslate;
 use yii\helpers\Url;
 use ale10257\translate\assets\TranslateAsset;
 
+$terms = [
+    'translations' => [
+        'ru' => 'Переводы',
+        'en' => 'Translations',
+    ],
+    'edit_terms' => [
+        'ru' => 'Для редактирования кликните по нужной ячейке таблицы',
+        'en' => 'To edit, click on the desired cell in the table',
+    ],
+    'clear_result_search' => [
+        'ru' => 'Сбросить результаты поиска',
+        'en' => 'Reset search results',
+    ],
+    'generate_excel' => [
+        'ru' => 'Сгенерировать файл excel',
+        'en' => 'Generate excel file',
+    ],
+    'download_excel' => [
+        'ru' => 'Загрузить файл excel с переводами',
+        'en' => 'Download excel file with translations',
+    ],
+    'download' => [
+        'ru' => 'Загрузить',
+        'en' => 'Download',
+    ],
+    'add_term' => [
+        'ru' => 'Добавить термин',
+        'en' => 'Add term',
+    ],
+    'edit_term' => [
+        'ru' => 'Редактировать перевод',
+        'en' => 'Edit translation',
+    ],
+];
+$source = (Yii::$app->sourceLanguage == 'ru' || Yii::$app->sourceLanguage == 'ru-Ru') ? 'ru' : 'en';
 TranslateAsset::register($this);
-$this->title = TService::t('Переводы');
+$this->title = $terms['translations'][$source];
 $this->params['breadcrumbs'][] = $this->title;
 $columns[] = ['class' => 'yii\grid\SerialColumn'];
 foreach (LANGUAGES as $language) {
@@ -43,15 +78,16 @@ $columns[] = [
 <div class="row">
     <div class="col-md-12">
         <h2><?= $this->title ?></h2>
-        <h4><?= TService::t('Для редактирования кликните по нужной ячейке таблицы') ?></h4>
+        <h4><?= $terms['edit_terms'][$source] ?></h4>
         <p>
-            <?= Html::a(TService::t('Сбросить результаты поиска'), ['index'], ['class' => 'btn btn-danger d-inline']) ?>
-            <?= Html::a(TService::t('Сгенерировать файл excel'), ['generate-excel'],
+            <?= Html::a($terms['clear_result_search'][$source], ['index'], ['class' => 'btn btn-danger d-inline']) ?>
+            <?= Html::a($terms['generate_excel'][$source], ['generate-excel'],
                 ['class' => 'btn btn-success d-inline']) ?>
-            <?= Html::a(TService::t('Добавить термин'), ['get-form'],
+            <?= Html::a($terms['add_term'][$source], ['get-form'],
                 ['class' => 'btn btn-info d-inline', 'data-action' => 'insert', 'id' => 'insert-term']) ?>
         </p>
-        <p><?= $this->render('_excel_form', ['excelModel' => $excelModel]) ?></p>
+        <p><?= $this->render('_excel_form',
+                ['excelModel' => $excelModel, 'terms' => $terms, 'source' => $source]) ?></p>
         <div class="box">
             <div class="box-body">
                 <?= GridView::widget([
@@ -71,7 +107,7 @@ $columns[] = [
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title"><?= TService::t('Редактировать перевод') ?></h4>
+                <h4 class="modal-title"><?= $terms['edit_term'][$source] ?></h4>
             </div>
             <div class="modal-body">
             </div>
