@@ -9,7 +9,7 @@ class SetUpLang implements BootstrapInterface
     public function bootstrap($app)
     {
         if (isset($_COOKIE['language'])) {
-            $languages = CheckLanguage::check();
+            $languages = \Yii::$app->ale10257Translate->sourceLanguages;
             if (in_array($_COOKIE['language'], $languages)) {
                 $app->language = $_COOKIE['language'];
             }

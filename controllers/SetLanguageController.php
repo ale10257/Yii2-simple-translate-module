@@ -8,7 +8,7 @@ class SetLanguageController extends Controller
 {
     public function actionIndex($language)
     {
-        $languages = CheckLanguage::check();
+        $languages = \Yii::$app->ale10257Translate->sourceLanguages;
         if (in_array($language, $languages)) {
             setcookie('language', $language, time() + (3600 * 24 * 360), '/');
         }

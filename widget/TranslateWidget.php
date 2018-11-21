@@ -4,7 +4,6 @@ namespace ale10257\translate\widget;
 
 use yii\base\Widget;
 use yii\helpers\Url;
-use ale10257\translate\helpers\CheckLanguage;
 
 class TranslateWidget extends Widget
 {
@@ -31,7 +30,7 @@ class TranslateWidget extends Widget
             'webPath' => $this->webIconsPath,
             'iconExt' => $this->iconExt,
             'language' => $this->language,
-            'languages' => CheckLanguage::check(),
+            'languages' => \Yii::$app->ale10257Translate->sourceLanguages,
         ]);
     }
 }
