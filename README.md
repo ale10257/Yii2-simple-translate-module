@@ -39,6 +39,8 @@ yii migrate/create create_ale10257_translate_table --fields=ru-RU:text,de-DE:tex
 yii migrate/create create_ale10257_translate_table --fields=ruRU:text,deDE:text
 ``
 
+<b>Важно:</b>: соблюдаем регистр. Если в таблице <b>ale10257_translate</b> вы создали поле ruRu, то и в настройках компонента <b>ale10257Translate</b> (об этом ниже), вы также должны указать ruRu, не, например, ruRU
+
 Применяем миграцию:
 
 ``
