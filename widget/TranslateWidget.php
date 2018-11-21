@@ -1,8 +1,10 @@
 <?php
+
 namespace ale10257\translate\widget;
 
 use yii\base\Widget;
 use yii\helpers\Url;
+use ale10257\translate\helpers\CheckLanguage;
 
 class TranslateWidget extends Widget
 {
@@ -21,15 +23,15 @@ class TranslateWidget extends Widget
         $this->language = \Yii::$app->language;
         if (!$this->urlChangeLanguage) {
             $this->urlChangeLanguage = Url::to([
-                '/' . TRANSLATE_MODULE . '/set-language',
+                '/translate/set-language',
                 'language' => $this->language
             ]);
         }
-
         return $this->render('index', [
             'webPath' => $this->webIconsPath,
             'iconExt' => $this->iconExt,
             'language' => $this->language,
+            'languages' => CheckLanguage::check(),
         ]);
     }
 }

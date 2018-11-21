@@ -46,14 +46,14 @@ $terms = [
         'en' => 'Edit translation',
     ],
 ];
-$source = (Yii::$app->sourceLanguage == 'ru' || Yii::$app->sourceLanguage == 'ru-Ru') ? 'ru' : 'en';
+$source = (Yii::$app->sourceLanguage == 'ru' || Yii::$app->sourceLanguage == 'ru-RU') ? 'ru' : 'en';
 TranslateAsset::register($this);
 $this->title = $terms['translations'][$source];
 $this->params['breadcrumbs'][] = $this->title;
 $columns[] = ['class' => 'yii\grid\SerialColumn'];
-foreach (LANGUAGES as $language) {
+foreach (Yii::$app->ale10257Translate->languages as $language) {
     $columns[] = [
-        'label' => strtoupper($language),
+        'label' => $language,
         'attribute' => $language,
         'contentOptions' => function ($model) use ($language) {
             /** @var ModelTranslate $model */

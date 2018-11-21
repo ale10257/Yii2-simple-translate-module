@@ -16,7 +16,7 @@ class Search extends ModelTranslate
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
-                'defaultOrder' => [\Yii::$app->sourceLanguage => SORT_ASC]
+                'defaultOrder' => [$this->sourceLanguage => SORT_ASC]
             ],
             'pagination' => [
                 'pageSize' => 50
@@ -29,7 +29,7 @@ class Search extends ModelTranslate
             return $dataProvider;
         }
 
-        foreach (LANGUAGES as $language) {
+        foreach (\Yii::$app->ale10257Translate->languages as $language) {
             $query->filterWhere(['like', $language, $this->$language]);
         }
 

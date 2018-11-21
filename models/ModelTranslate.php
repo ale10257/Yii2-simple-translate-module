@@ -1,7 +1,6 @@
 <?php
 namespace ale10257\translate\models;
 
-use ale10257\translate\Translate;
 use yii\db\ActiveRecord;
 use Yii;
 use yii\helpers\FileHelper;
@@ -13,37 +12,56 @@ use yii\helpers\FileHelper;
  */
 class ModelTranslate extends ActiveRecord
 {
+    /** @var array */
+    protected $languages;
+    /** @var string */
+    protected $cacheKey;
+    /** @var array */
+    protected $tService;
+    /** @var string */
+    protected $language;
+    /** @var string */
+    protected $sourceLanguage;
+
     /** @inheritdoc */
     public static function tableName()
     {
         return 'ale10257_translate';
     }
 
+    public function __construct(array $config = [])
+    {
+        parent::__construct($config);
+        $config = Yii::$app->ale10257Translate;
+        $this->languages = $config->languages;
+        $this->cacheKey = $config->cacheKey;
+        $this->tService = $config->tService;
+        $this->language = str_replace('-', '', Yii::$app->language);
+        $this->sourceLanguage = str_replace('-', '', Yii::$app->sourceLanguage);
+    }
+
     /**  @inheritdoc */
     public function rules()
     {
-        $languages = LANGUAGES;
-        foreach ($languages as $key => $language) {
-            $languages[$key] = str_replace('-', '', $language);
-        }
         return [
-            [$languages, 'string'],
+            [$this->languages, 'string'],
         ];
     }
 
     public static function getMsg($message)
     {
-        $language = Yii::$app->language;
-        if (!in_array($language, LANGUAGES)) {
+        $self = new self;
+        $language = $self->language;
+        $sourceLanguage = $self->sourceLanguage;
+        if (!in_array($language, $self->languages)) {
             throw new \DomainException('Language ' . $language . ' not found in ' . __METHOD__);
         }
-        $sourceLanguage = Yii::$app->sourceLanguage;
         $cache = Yii::$app->cache;
-        $key = TRANSLATE_MODULE;
+        $key = $self->cacheKey;
         if (!$translate = $cache->get($key)) {
             if ($data = self::find()->orderBy([$sourceLanguage => SORT_ASC])->all()) {
                 foreach ($data as $item) {
-                    foreach (LANGUAGES as $language) {
+                    foreach ($self->languages as $language) {
                         $translate[$language][$item->$sourceLanguage] = $item->$language;
                     }
                 }
@@ -53,9 +71,8 @@ class ModelTranslate extends ActiveRecord
         }
         if (!isset($translate[$sourceLanguage][$message])) {
             if (!self::find()->where([$sourceLanguage => $message])->count()) {
-                $model = new self;
-                $model->$sourceLanguage = $message;
-                if (!$model->save()) {
+                $self->$sourceLanguage = $message;
+                if (!$self->save()) {
                     throw new \DomainException('Language ' . $message . ' save error!');
                 }
             }
@@ -71,13 +88,13 @@ class ModelTranslate extends ActiveRecord
 
     private static function createTService()
     {
-        /** @var Translate $module */
-        $module = \Yii::$app->getModule(TRANSLATE_MODULE);
-        if (!$tService = $module->tService) {
+        $self = new self;
+        if (!$tService = $self->tService) {
             return;
         }
-        $data = Yii::$app->cache->get(TRANSLATE_MODULE);
-        $data = $data[Yii::$app->sourceLanguage];
+        $data = Yii::$app->cache->get($self->cacheKey);
+        $sourceLanguage = $self->sourceLanguage;
+        $data = $data[$sourceLanguage];
         $str = '<?php' . PHP_EOL . 'namespace ' . $tService['nameSpace'] . ';' . PHP_EOL;
         $str .= 'use ale10257\translate\models\ModelTranslate;' . PHP_EOL . PHP_EOL;
         $str .= 'class TService' . PHP_EOL . '{' . PHP_EOL . "\t" . 'public static $terms = [' . PHP_EOL;

@@ -6,6 +6,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx as Writer;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx as Reader;
 use yii\web\UploadedFile;
+use Yii;
 
 class Excel
 {
@@ -17,13 +18,14 @@ class Excel
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $col = $this->startAlphabet;
-        foreach (LANGUAGES as $language) {
+        foreach (Yii::$app->ale10257Translate->languages as $language) {
             $sheet->setCellValue($col . 1, $language);
             $col++;
         }
-        foreach (ModelTranslate::find()->orderBy([\Yii::$app->sourceLanguage => SORT_ASC])->all() as $key => $item) {
+        $sourceLanguage = str_replace('-', '', \Yii::$app->sourceLanguage);
+        foreach (ModelTranslate::find()->orderBy([$sourceLanguage => SORT_ASC])->all() as $key => $item) {
             $col = $this->startAlphabet;
-            foreach (LANGUAGES as $language) {
+            foreach (Yii::$app->ale10257Translate->languages as $language) {
                 $sheet->setCellValue($col . ($key + 2), $item->$language);
                 $col++;
             }
@@ -51,9 +53,9 @@ class Excel
         $data = [];
         $i = 0;
         $col = $this->startAlphabet;
-        foreach (LANGUAGES as $language) {
+        foreach (Yii::$app->ale10257Translate->languages as $language) {
             $lang = $worksheet->getCell($col . $row)->getValue();
-            if (in_array($lang, LANGUAGES)) {
+            if (in_array($lang, Yii::$app->ale10257Translate->languages)) {
                 $languages[$i] = $language;
                 $col++;
             }
@@ -78,7 +80,7 @@ class Excel
         if ($data) {
             ModelTranslate::deleteAll();
             \Yii::$app->db->createCommand()->batchInsert(ModelTranslate::tableName(), $languages, $data)->execute();
-            \Yii::$app->cache->delete(TRANSLATE_MODULE);
+            \Yii::$app->cache->delete(Yii::$app->ale10257Translate->cacheKey);
         }
     }
 }

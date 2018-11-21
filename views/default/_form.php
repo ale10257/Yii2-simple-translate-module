@@ -15,8 +15,8 @@ use yii\widgets\ActiveForm;
             'id' => 'form-translate'
         ]
     ]); ?>
-    <? foreach (LANGUAGES as $language) : ?>
-        <?= $form->field($model, $language)->textarea(['rows' => 3])->label(strtoupper($language)) ?>
+    <? foreach (Yii::$app->ale10257Translate->languages as $language) : ?>
+        <?= $form->field($model, $language)->textarea(['rows' => 3])->label($language) ?>
     <? endforeach ?>
     <div class="form-group text-right">
         <?= Html::submitButton('Ok', ['class' => 'btn btn-success']) ?>
