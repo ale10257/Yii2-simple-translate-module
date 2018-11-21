@@ -36,7 +36,7 @@ $config = [
 Значение $sourceLanguage обязательно должно присутствовать в команде для создания миграции с нужными полями (локалями):
 
 ``
-yii migrate/create create_ale10257_translate_table --fields=ru:text,de:text
+php yii migrate/create create_ale10257_translate_table --fields=ru:text,de:text
 ``
 
 <b>Важно:</b> названия полей ru, de, en, es ... в таблице ale10257_translate должны соответствовать правилам объявления переменных в языке php и правилам объявления локали в Yii2 (без дефиса)! 
@@ -44,13 +44,13 @@ yii migrate/create create_ale10257_translate_table --fields=ru:text,de:text
 <b>Неверно (ru-RU, de-DE)</b>:
 
 ``
-yii migrate/create create_ale10257_translate_table --fields=ru-RU:text,de-DE:text
+php yii migrate/create create_ale10257_translate_table --fields=ru-RU:text,de-DE:text
 ``
 
 <b>Верно (ruRU, deDE)</b>:
 
 ``
-yii migrate/create create_ale10257_translate_table --fields=ruRU:text,deDE:text
+php yii migrate/create create_ale10257_translate_table --fields=ruRU:text,deDE:text
 ``
 
 <b>Важно:</b> соблюдаем регистр. Если в таблице <b>ale10257_translate</b> вы создали поле ruRu, то и в настройках компонента <b>ale10257Translate</b> (об этом ниже), вы также должны указать ruRu, не, например, ruRU
