@@ -198,7 +198,7 @@ app\components\translate
 Заходим в браузере в модуль ale10257\translate\Translate
 
 ```
-Url::to('/' . TRANSLATE_MODULE);
+Url::to('/' . your-name-translate-module);
 ```
 
 - Явно создаем термин, например 'Жирафы летят на юг'
