@@ -29,9 +29,8 @@ class ModelTranslate extends ActiveRecord
         return 'ale10257_translate';
     }
 
-    public function __construct(array $config = [])
+    public function init()
     {
-        parent::__construct($config);
         $config = Yii::$app->ale10257Translate;
         $this->languages = $config->languages;
         $this->cacheKey = $config->cacheKey;
@@ -48,37 +47,36 @@ class ModelTranslate extends ActiveRecord
         ];
     }
 
-    public static function getMsg($message)
+    public function getMsg($message)
     {
-        $self = new self;
-        $language = $self->language;
-        $sourceLanguage = $self->sourceLanguage;
-        if (!in_array($language, $self->languages)) {
+        $language = $this->language;
+        $sourceLanguage = $this->sourceLanguage;
+        if (!in_array($language, $this->languages)) {
             throw new \DomainException('Language ' . $language . ' not found in ' . __METHOD__);
         }
         $cache = Yii::$app->cache;
-        $key = $self->cacheKey;
+        $key = $this->cacheKey;
         if (!$translate = $cache->get($key)) {
             if ($data = self::find()->orderBy([$sourceLanguage => SORT_ASC])->all()) {
                 foreach ($data as $item) {
-                    foreach ($self->languages as $language) {
+                    foreach ($this->languages as $language) {
                         $translate[$language][$item->$sourceLanguage] = $item->$language;
                     }
                 }
                 $cache->set($key, $translate);
-                self::createTService();
+                $this->createTService();
             }
         }
         if (!isset($translate[$sourceLanguage][$message])) {
             if (!self::find()->where([$sourceLanguage => $message])->count()) {
-                $self->$sourceLanguage = $message;
-                if (!$self->save()) {
+                $this->$sourceLanguage = $message;
+                if (!$this->save()) {
                     throw new \DomainException('Language ' . $message . ' save error!');
                 }
             }
             $translate[$sourceLanguage][$message] = $message;
             $cache->set($key, $translate);
-            self::createTService();
+            $this->createTService();
         }
         if (empty($translate[$language][$message])) {
             return $translate[$sourceLanguage][$message];
@@ -86,14 +84,13 @@ class ModelTranslate extends ActiveRecord
         return $translate[$language][$message];
     }
 
-    private static function createTService()
+    private function createTService()
     {
-        $self = new self;
-        if (!$tService = $self->tService) {
+        if (!$tService = $this->tService) {
             return;
         }
-        $data = Yii::$app->cache->get($self->cacheKey);
-        $sourceLanguage = $self->sourceLanguage;
+        $data = Yii::$app->cache->get($this->cacheKey);
+        $sourceLanguage = $this->sourceLanguage;
         $data = $data[$sourceLanguage];
         $str = '<?php' . PHP_EOL . 'namespace ' . $tService['nameSpace'] . ';' . PHP_EOL;
         $str .= 'use ale10257\translate\models\ModelTranslate;' . PHP_EOL . PHP_EOL;
@@ -103,7 +100,8 @@ class ModelTranslate extends ActiveRecord
         }
         $str .= "\t" . '];' . PHP_EOL . PHP_EOL;
         $str .= "\t" . 'public static function t($message, $params = [])' . PHP_EOL . "\t" . '{' . PHP_EOL;
-        $str .= "\t\t" . '$message = ModelTranslate::getMsg($message);' . PHP_EOL;
+        $str .= "\t\t" . '$model = new ModelTranslate();' . PHP_EOL;
+        $str .= "\t\t" . '$message = $model->getMsg($message);' . PHP_EOL;
         $str .= "\t\t" . '$placeholders = [];' . PHP_EOL;
         $str .= "\t\t" . 'if ($params) {' . PHP_EOL;
         $str .= "\t\t\t" . 'foreach ($params as $name => $value) {' . PHP_EOL;

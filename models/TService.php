@@ -7,7 +7,8 @@ class TService
 
 	public static function t($message, $params = [])
 	{
-		$message = ModelTranslate::getMsg($message);
+	    $model = new ModelTranslate();
+		$message = $model->getMsg($message);
 		$placeholders = [];
 		if ($params) {
 			foreach ($params as $name => $value) {
