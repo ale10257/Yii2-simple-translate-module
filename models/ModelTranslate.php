@@ -67,7 +67,7 @@ class ModelTranslate extends ActiveRecord
                 $this->createTService();
             }
         }
-        if (!isset($translate[$sourceLanguage][$message]) && $translate[$sourceLanguage][$message]) {
+        if (!isset($translate[$sourceLanguage][$message]) && $message) {
             if (!self::find()->where([$sourceLanguage => $message])->count()) {
                 $this->$sourceLanguage = $message;
                 if (!$this->save()) {
