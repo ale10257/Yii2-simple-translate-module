@@ -33,12 +33,6 @@ yii migrate/create create_ale10257_translate_table --fields=ru:text,de:text
 yii migrate/create create_ale10257_translate_table --fields=ru-RU:text,de-DE:text
 ``
 
-<b>Неверно (ruRu, deDe)</b>:
-
-``
-yii migrate/create create_ale10257_translate_table --fields=ruRu:text,deDe:text
-``
-
 <b>Верно (ruRU, deDE)</b>:
 
 ``
