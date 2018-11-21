@@ -174,10 +174,7 @@ $basePath = dirname(__DIR__);
     'components' => [
         'ale10257Translate' => [
             'class' => 'ale10257\translate\ConfigTranslate',
-            'languages' => [
-                'Русский' => 'ru',
-                'Deutsch' => 'de',
-            ],
+            'languages' => $languages,
             'cacheKey' => 'ale10257_translate',
             'tService' => [
                 'nameSpace' => 'app\components\translate',
