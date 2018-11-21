@@ -69,6 +69,7 @@ $config = [
     ],
     'modules' => [
 ...        
+        // название модуля может быть любым в рамках соглашений Yii2 о наименовании модулей
         'translate' => [
             'class' => 'ale10257\translate\Translate',
         ],
@@ -97,6 +98,7 @@ php yii migrate
         ...
         'translate' => [
             'class' => 'ale10257\translate\Translate',
+            'accessRules' => ['your-settings']
         ],
         ...
     ],
