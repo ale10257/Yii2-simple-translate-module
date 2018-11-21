@@ -17,7 +17,7 @@ TService::t('Крокодилы летят на север')
 ------------------------
 
 `
-composer require ale10257/yii2-simple-translate-module "dev-master"
+composer require ale10257/yii2-simple-translate-module "@dev"
 `
 
 <h5>В первую очередь необходимо корректно определить переменные $language и $sourceLanguage в конфигурационном файле приложения </h5>
