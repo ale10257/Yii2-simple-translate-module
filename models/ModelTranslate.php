@@ -45,6 +45,7 @@ class ModelTranslate extends ActiveRecord
     {
         return [
             [$this->languages, 'string'],
+            [$this->languages, 'trim'],
         ];
     }
 

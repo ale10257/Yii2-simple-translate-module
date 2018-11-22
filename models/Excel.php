@@ -69,7 +69,7 @@ class Excel
             $i = 0;
             for ($col = $this->startAlphabet; $col != $highestColumn; $col++) {
                 if (isset($languages[$i])) {
-                    $a[$languages[$i]] = $worksheet->getCell($col . $row)->getValue();
+                    $a[$languages[$i]] = trim($worksheet->getCell($col . $row)->getValue());
                     $i++;
                 }
             }

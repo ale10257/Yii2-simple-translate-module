@@ -14,7 +14,7 @@ class Translate extends \yii\base\Module
         'allow' => true,
         'roles' => ['@'],
     ];
-    
+
     public function behaviors()
     {
         return [

@@ -149,7 +149,7 @@ Url::to('/' . your-name-translate-module);
  * @var $this \yii\web\View
  */
 use ale10257\translate\models\TService;
-echo TService::t( 'Крокодилы летят на север');
+echo TService::t('Крокодилы летят на север');
 ```
 
 Как и в стандартной локализации Yii2, можно передавать параметры  в метод `t()`, например:
