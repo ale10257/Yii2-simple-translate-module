@@ -65,7 +65,7 @@ class DefaultController extends Controller
                     'value' => $model->$language,
                 ];
             }
-            \Yii::$app->cache->delete(Yii::$app->ale10257Translate->cacheKey);
+            $model->createCache();
         } else {
             $result['error'] = implode(PHP_EOL, $model->firstErrors);
         }
@@ -83,7 +83,7 @@ class DefaultController extends Controller
         ];
         if ($model->load(\Yii::$app->request->post()) && $model->save()) {
             $result['reload'] = true;
-            \Yii::$app->cache->delete(Yii::$app->ale10257Translate->cacheKey);
+            $model->createCache();
         } else {
             $result['error'] = implode(PHP_EOL, $model->firstErrors);
         }
@@ -118,8 +118,9 @@ class DefaultController extends Controller
 
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
-        \Yii::$app->cache->delete(Yii::$app->ale10257Translate->cacheKey);
+        $model = $this->findModel($id);
+        $model->delete();
+        $model->createCache();
         return $this->redirect(['index']);
     }
 

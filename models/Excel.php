@@ -78,9 +78,10 @@ class Excel
             }
         }
         if ($data) {
-            ModelTranslate::deleteAll();
-            \Yii::$app->db->createCommand()->batchInsert(ModelTranslate::tableName(), $languages, $data)->execute();
-            \Yii::$app->cache->delete(Yii::$app->ale10257Translate->cacheKey);
+            $model = new ModelTranslate();
+            $model::deleteAll();
+            \Yii::$app->db->createCommand()->batchInsert($model::tableName(), $languages, $data)->execute();
+            $model->createCache();
         }
     }
 }

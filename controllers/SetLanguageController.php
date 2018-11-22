@@ -1,7 +1,6 @@
 <?php
 namespace ale10257\translate\controllers;
 
-use ale10257\translate\helpers\CheckLanguage;
 use yii\web\Controller;
 
 class SetLanguageController extends Controller
