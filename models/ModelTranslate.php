@@ -1,4 +1,5 @@
 <?php
+
 namespace ale10257\translate\models;
 
 use yii\db\ActiveRecord;
@@ -47,41 +48,29 @@ class ModelTranslate extends ActiveRecord
         ];
     }
 
-    public function getMsg($message)
+    public function checkMsg($message, $language)
     {
-        $language = $this->language;
-        $sourceLanguage = $this->sourceLanguage;
-        if (!in_array($language, $this->languages)) {
-            throw new \DomainException('Language ' . $language . ' not found in ' . __METHOD__);
+        if (!self::find()->where([$language => $message])->count()) {
+            $this->$language = $message;
+            $this->save();
         }
+    }
+
+    public function createCache()
+    {
+        $cacheKey = $this->cacheKey;
         $cache = Yii::$app->cache;
-        $key = $this->cacheKey;
-        if (!$translate = $cache->get($key)) {
-            if ($data = self::find()->orderBy([$sourceLanguage => SORT_ASC])->all()) {
-                foreach ($data as $item) {
-                    foreach ($this->languages as $language) {
-                        $translate[$language][$item->$sourceLanguage] = $item->$language;
-                    }
-                }
-                $cache->set($key, $translate);
-                $this->createTService();
+        $sourceLanguage = $this->sourceLanguage;
+        $data = self::find()->orderBy([$sourceLanguage => SORT_ASC])->all();
+        $arr = [];
+        foreach ($data as $value) {
+            foreach ($this->languages as $language) {
+                $arr[$language][$value->$sourceLanguage] = $value->$language;
             }
         }
-        if (!isset($translate[$sourceLanguage][$message]) && $message) {
-            if (!self::find()->where([$sourceLanguage => $message])->count()) {
-                $this->$sourceLanguage = $message;
-                if (!$this->save()) {
-                    throw new \DomainException('Language ' . $message . ' save error!');
-                }
-            }
-            $translate[$sourceLanguage][$message] = $message;
-            $cache->set($key, $translate);
-            $this->createTService();
-        }
-        if (!isset($translate[$language][$message])) {
-            return $translate[$sourceLanguage][$message];
-        }
-        return $translate[$language][$message];
+        $cache->set($cacheKey, $arr);
+        $this->createTService();
+        return $arr;
     }
 
     private function createTService()
@@ -92,27 +81,16 @@ class ModelTranslate extends ActiveRecord
         $data = Yii::$app->cache->get($this->cacheKey);
         $sourceLanguage = $this->sourceLanguage;
         $data = $data[$sourceLanguage];
-        $str = '<?php' . PHP_EOL . 'namespace ' . $tService['nameSpace'] . ';' . PHP_EOL;
-        $str .= 'use ale10257\translate\models\ModelTranslate;' . PHP_EOL . PHP_EOL;
-        $str .= 'class TService' . PHP_EOL . '{' . PHP_EOL . "\t" . 'public static $terms = [' . PHP_EOL;
+        $source = file_get_contents(__DIR__ . '/TService.php');
+        $str = "\t" . 'public static $terms = [' . PHP_EOL;
         foreach ($data as $item) {
             $str .= "\t\t'$item'" . ' => ' . "'$item'," . PHP_EOL;
         }
-        $str .= "\t" . '];' . PHP_EOL . PHP_EOL;
-        $str .= "\t" . 'public static function t($message, $params = [])' . PHP_EOL . "\t" . '{' . PHP_EOL;
-        $str .= "\t\t" . '$model = new ModelTranslate();' . PHP_EOL;
-        $str .= "\t\t" . '$message = $model->getMsg($message);' . PHP_EOL;
-        $str .= "\t\t" . '$placeholders = [];' . PHP_EOL;
-        $str .= "\t\t" . 'if ($params) {' . PHP_EOL;
-        $str .= "\t\t\t" . 'foreach ($params as $name => $value) {' . PHP_EOL;
-        $str .= "\t\t\t\t" . '$placeholders[\'{\' . $name . \'}\'] = $value;' . PHP_EOL;
-        $str .= "\t\t\t" . '}' . PHP_EOL;
-        $str .= "\t\t" . '}' . PHP_EOL;
-        $str .= "\t\t" . 'return !$placeholders ? $message : strtr($message, $placeholders);' . PHP_EOL;
-        $str .= "\t" . '}' . PHP_EOL;
-        $str .= '}';
+        $str .= "\t" . '];';
+        $replace = 'namespace ' . $tService['nameSpace'] . ';' . PHP_EOL . PHP_EOL . 'use ale10257\translate\models\ModelTranslate;';
+        $source = str_replace(['namespace ale10257\translate\models;', 'public static $terms = [];'], [$replace, $str], $source);
         FileHelper::createDirectory($tService['path']);
         $file = FileHelper::normalizePath($tService['path'] . '/TService.php');
-        file_put_contents($file, $str);
+        file_put_contents($file, $source);
     }
 }

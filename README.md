@@ -17,7 +17,7 @@ TService::t('Крокодилы летят на север')
 ------------------------
 
 ```
-composer require ale10257/yii2-simple-translate-module "@dev"
+composer require ale10257/yii2-simple-translate-module "^1.0"
 ```
 
 Соглашение об именовании полей таблицы для хранения терминов
