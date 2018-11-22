@@ -82,7 +82,7 @@ class ModelTranslate extends ActiveRecord
         $sourceLanguage = $this->sourceLanguage;
         $data = $data[$sourceLanguage];
         $source = file_get_contents(__DIR__ . '/TService.php');
-        $str = "\t" . 'public static $terms = [' . PHP_EOL;
+        $str = 'public static $terms = [' . PHP_EOL;
         foreach ($data as $item) {
             $str .= "\t\t'$item'" . ' => ' . "'$item'," . PHP_EOL;
         }
