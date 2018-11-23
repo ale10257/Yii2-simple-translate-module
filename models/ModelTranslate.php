@@ -85,7 +85,7 @@ class ModelTranslate extends ActiveRecord
         $source = file_get_contents(__DIR__ . '/TService.php');
         $str = 'public static $terms = [' . PHP_EOL;
         foreach ($data as $item) {
-            $str .= "\t\t'$item'" . ' => ' . "'$item'," . PHP_EOL;
+            $str .= "\t\t" . '"' . $item . '"' . ' => ' . '"' . $item . '",' . PHP_EOL;
         }
         $str .= "\t" . '];';
         $replace = 'namespace ' . $tService['nameSpace'] . ';' . PHP_EOL . PHP_EOL . 'use ale10257\translate\models\ModelTranslate;';
