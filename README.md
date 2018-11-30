@@ -72,7 +72,16 @@ $config = [
         // название модуля может быть любым в рамках соглашений Yii2 о наименовании модулей
         'translate' => [
             'class' => 'ale10257\translate\Translate',
-        ],
+            'as access' => [
+                'class' => 'yii\filters\AccessControl',
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+        ],            
 ...        
     ], 
 ];
@@ -89,51 +98,6 @@ php yii migrate/create create_ale10257_translate_table --fields=ru:text,de:text
 ```
 php yii migrate
 ```
-
-<b>Важно:</b> при объявлении модуля `ale10257\translate\Translate` можно передать ряд настроек.
-
-```
-    ...
-    'modules' => [
-        ...
-        'translate' => [
-            'class' => 'ale10257\translate\Translate',
-            'accessRules' => ['your-settings']
-        ],
-        ...
-    ],
-    ...
-```
-
- Исходный код модуля `ale10257\translate\Translate`:
- 
-```
-/**
- * Translate module definition class
- */
-class Translate extends \yii\base\Module
-{
-    /** @var array  */
-    public $accessRules = [
-        'allow' => true,
-        'roles' => ['@'],
-    ];
-
-    public function behaviors()
-    {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'rules' => [
-                    $this->accessRules,
-                ],
-            ],
-        ];
-    }
-}
-```
-
-Т.е. можно изменить права доступа, переопределив `$accessRules` (по умолчанию модуль доступен только для зарегистрированных пользователей).
 
 <h4>После выполнения всех настроек модуль доступен по адресу</h4>
 
