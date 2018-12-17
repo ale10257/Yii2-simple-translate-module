@@ -81,17 +81,19 @@ class ModelTranslate extends ActiveRecord
         }
         $data = Yii::$app->cache->get($this->cacheKey);
         $sourceLanguage = $this->sourceLanguage;
-        $data = $data[$sourceLanguage];
-        $source = file_get_contents(__DIR__ . '/TService.php');
-        $str = 'public static $terms = [' . PHP_EOL;
-        foreach ($data as $item) {
-            $str .= "\t\t" . '"' . $item . '"' . ' => ' . '"' . $item . '",' . PHP_EOL;
+        if (!empty($data[$sourceLanguage])) {
+            $data = $data[$sourceLanguage];
+            $source = file_get_contents(__DIR__ . '/TService.php');
+            $str = 'public static $terms = [' . PHP_EOL;
+            foreach ($data as $item) {
+                $str .= "\t\t" . '"' . $item . '"' . ' => ' . '"' . $item . '",' . PHP_EOL;
+            }
+            $str .= "\t" . '];';
+            $replace = 'namespace ' . $tService['nameSpace'] . ';' . PHP_EOL . PHP_EOL . 'use ale10257\translate\models\ModelTranslate;';
+            $source = str_replace(['namespace ale10257\translate\models;', 'public static $terms = [];'], [$replace, $str], $source);
+            FileHelper::createDirectory($tService['path']);
+            $file = FileHelper::normalizePath($tService['path'] . '/TService.php');
+            file_put_contents($file, $source);
         }
-        $str .= "\t" . '];';
-        $replace = 'namespace ' . $tService['nameSpace'] . ';' . PHP_EOL . PHP_EOL . 'use ale10257\translate\models\ModelTranslate;';
-        $source = str_replace(['namespace ale10257\translate\models;', 'public static $terms = [];'], [$replace, $str], $source);
-        FileHelper::createDirectory($tService['path']);
-        $file = FileHelper::normalizePath($tService['path'] . '/TService.php');
-        file_put_contents($file, $source);
     }
 }
